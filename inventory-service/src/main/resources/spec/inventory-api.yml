@@ -1,0 +1,123 @@
+openapi: "3.0.3"
+info:
+  title: inventory-api
+  version: 1.0.0
+paths:
+  /products:
+    get:
+      description: Get All Products
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: All products are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListOfProducts'
+        '404':
+          description: No Product returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: Add A Product to inventory
+      operationId: addProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: All products are returned
+          headers:
+            location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: No Product returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /products/{id}:
+    get:
+      description: Get A Product By ID
+      operationId: getProductById
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        '200':
+          description: All products are returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: No Product returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      description: Update A Product
+      operationId: updateProduct
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Created product is  returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Product Does not Exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    ListOfProducts:
+      type: array
+      items:
+        $ref: '#/components/schemas/Product'
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
